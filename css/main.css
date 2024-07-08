@@ -1,0 +1,39 @@
+body {
+    background-color: #77966d35;
+    height: 100vh;
+}
+
+header {
+    height: 60px;
+}
+
+nav {
+    background-color: #bcc667;
+}
+
+nav > div > a > img {
+    width: 120px;
+    height: 24px;
+}
+
+main {
+    min-height: calc(100vh - 140px);
+}
+
+footer {
+    height: 80px;
+}
+
+footer > ul > li > a > img {
+    width: 30px;
+    height: 30px;
+}
+
+.carousel {
+    height: 200px;
+}
+
+.card {
+    width: 280px;
+    height: 400px;
+}
