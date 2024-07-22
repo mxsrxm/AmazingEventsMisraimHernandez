@@ -193,24 +193,65 @@ const data = {
             __v: 0,
         },
     ],
-};
+}; 
 
 data.currentDate
 data.events
 data.events[0].name
 
-function showEvents() {
-    for (let i = 0; i < data.events.length; i++) {
-        createCard(data.events[i]);
+let container_cards = document.getElementById("container_cards");
+let container_checkbox_category = document.getElementById("container_checkbox_category");
+let filterCheck = document.getElementById("filter-check");
+let filterSearch = document.getElementById("filter-search") // del filtro de busqueda 
 
+function showEvents(data, container_cards) {
+    let cardsHTML = "";
+
+    if (data.events.length > 0) {
+        for (let i = 0; i < data.events.length; i++) {
+            cardsHTML += createCard(data.events[i]);
+        }
+        container_cards.innerHTML = cardsHTML;
+
+    } else {
+        //Mostrar un mensaje de que no hay eventos
+        container_cards.innerHTML = `
+        <div>
+
+        "NO HAY EVENTOS PARA MOSTRAR"   
+        </div>
+        `;
+       
+    }
+}
+
+function showCheckBoxCategory(data, container_checkbox_category) {
+    let ckBoxCategoryHTML = "";
+
+    if (data.events.length > 0) {
+
+        let categoriesFromEvents = data.events.map((event) => event.category);
+
+        let categoriesWithoutDuplicates = categoriesFromEvents.filter(
+            (category, index) => categoriesFromEvents.indexOf(category) === index
+        );
+
+        for (let i = 0; i < categoriesWithoutDuplicates.length; i++) {
+            ckBoxCategoryHTML += createCheckBoxCategory(categoriesWithoutDuplicates[i]);
+        }
+
+        container_checkbox_category.innerHTML = ckBoxCategoryHTML;
+
+    }
+
+    for (let i = 0; i < categoriesWithoutDuplicates.length; i++) {
+        ckBoxCategoryHTML += createCheckBoxCategory(categoriesWithoutDuplicates[i]);
     }
 }
 
 function createCard(event) {
-    let container_cards = document.getElementById("container_cards");
-    let card = document.createElement("div");
-    card.className = "card m-3";
-    card.innerHTML = `  
+    let cardHTML = `  
+        <div id="${event._id}" class="card m-3">
             <img src="${event.image}" class="card-img-top w-100 h-50 object-fit-cover" alt="${event.name}">
             <div class="card-body text-center">
                 <h5 class="card-title text-capitalize">${event.name}</h5>
@@ -220,8 +261,33 @@ function createCard(event) {
                 <h4 class="fw-bold fs">Price: <span class="text-warning fw-bold fs-5"> $${event.price} </span></h4>
                 <a href="./pages/details.html" class="btn btn-primary">Details</a>
             </div>
+        </div>
     `;
-    container_cards.appendChild(card);
+
+    return cardHTML;
 }
 
-showEvents();
+function createCheckBoxCategory(event) {
+    let checkboxCategoryHTML = `
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="filter-check-${event}">
+            <label class="form-check-label" for="filter-check-${event}">${event}</label>
+        </div>
+    `;
+
+    /* console.log(checkboxCategoryHTML); */
+    return checkboxCategoryHTML;
+
+}
+
+function filterSearchEvents(data, searchText) {
+    let eventsFiltered = data.events.filter((event) => {
+        event.name.toLowerCase().includes(search.toLowerCase());
+    });
+
+    return eventsFiltered;
+}
+
+
+showEvents(data, container_cards);
+showCheckBoxCategory(data, container_checkbox_category);
