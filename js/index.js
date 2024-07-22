@@ -291,3 +291,10 @@ function filterSearchEvents(data, searchText) {
 
 showEvents(data, container_cards);
 showCheckBoxCategory(data, container_checkbox_category);
+
+filterSearch.addEventListener("keyup", () => {
+    //
+    console.log(filterSearch.value);
+
+   
+});
