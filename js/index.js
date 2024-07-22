@@ -282,8 +282,12 @@ function createCheckBoxCategory(event) {
 
 function filterSearchEvents(data, searchText) {
     let eventsFiltered = data.events.filter((event) => {
-        event.name.toLowerCase().includes(search.toLowerCase());
+        event.name.toLowerCase().includes(searchText.toLowerCase())
+        ||
+        event.description.toLowerCase().includes(searchText.toLowerCase())
     });
+
+    console.log(eventsFiltered);
 
     return eventsFiltered;
 }
@@ -293,8 +297,8 @@ showEvents(data, container_cards);
 showCheckBoxCategory(data, container_checkbox_category);
 
 filterSearch.addEventListener("keyup", () => {
-    //
-    console.log(filterSearch.value);
+    let eventsFiltered = filterSearchEvents(data, filterSearch.value.toLowerCase());
+    showEvents({ events: eventsFiltered }, container_cards);
 
    
 });
