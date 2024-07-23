@@ -199,19 +199,67 @@ data.currentDate
 data.events
 data.events[0].name
 
-function showEvents() { 
-    for (let i = 0; i < data.events.length; i++) {
-        if (data.events[i].date < data.currentDate) {
-            createCard(data.events[i]);
+let container_cards = document.getElementById("container_cards");
+let container_checkbox_category = document.getElementById("container_checkbox_category");
+let filterSearch = document.getElementById("filter-search")
+let eventsFilteredByDate = filterEventsByDate(data);
+
+
+function showEvents(data, container_cards) {
+    let cardsHTML = "";
+
+    if (data.events.length > 0) {
+        for (let i = 0; i < data.events.length; i++) {
+            cardsHTML += createCard(data.events[i]);
         }
+        container_cards.innerHTML = cardsHTML;
+
+    } else {
+        container_cards.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+                <symbol id="exclamation-triangle-fill" viewBox="0 0 16 16">
+                    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                </symbol>
+            </svg>
+
+            <div class="alert alert-danger d-flex align-items-center" role="alert">
+                <svg class=" bi flex-shrink-0 me-2" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                <div>
+                    No events found to show
+                </div>
+            </div>
+        `;
+    }
+}
+
+function showCheckBoxCategory(data, container_checkbox_category) {
+    let ckBoxCategoryHTML = "";
+
+    if (data.events.length > 0) {
+
+        let categoriesFromEvents = data.events.map((event) => event.category);
+
+        let categoriesWithoutDuplicates = categoriesFromEvents.filter(
+            (category, index) => categoriesFromEvents.indexOf(category) === index
+        );
+
+        console.log(categoriesWithoutDuplicates);
+
+        for (let i = 0; i < categoriesWithoutDuplicates.length; i++) {
+            ckBoxCategoryHTML += createCheckBoxCategory(categoriesWithoutDuplicates[i]);
+        }
+
+        container_checkbox_category.innerHTML = ckBoxCategoryHTML;
     }
 }
 
 function createCard(event) {
-    let container_cards = document.getElementById("container_cards");
-    let card = document.createElement("div");
-    card.className = "card m-3";
-    card.innerHTML = `  
+
+    let id = event._id;
+    let url = new URLSearchParams({ _id: id });
+
+    let cardHTML = `  
+        <div id="${event._id}" class="card m-3">
             <img src="${event.image}" class="card-img-top w-100 h-50 object-fit-cover" alt="${event.name}">
             <div class="card-body text-center">
                 <h5 class="card-title text-capitalize">${event.name}</h5>
@@ -219,10 +267,84 @@ function createCard(event) {
             </div>
             <div class="d-flex justify-content-around mb-4">
                 <h4 class="fw-bold fs">Price: <span class="text-warning fw-bold fs-5"> $${event.price} </span></h4>
-                <a href="./pages/details.html" class="btn btn-primary">Details</a>
+                <a class="btn btn-primary" href="../pages/details.html?${url}">Details</a>
             </div>
+        </div>
     `;
-    container_cards.appendChild(card);
+
+    console.log(url);
+    return cardHTML;
 }
 
-showEvents();
+function createCheckBoxCategory(event) {
+    let checkboxCategoryHTML = `
+        <div class="form-check me-2">
+            <input class="form-check-input" type="checkbox" value="" id="filter-check-${event}">
+            <label class="form-check-label" for="filter-check-${event}">
+                ${event}
+            </label>
+        </div>
+    `;
+
+    console.log(checkboxCategoryHTML);
+
+    return checkboxCategoryHTML;
+
+}
+
+function filterEventsByDate(data) {
+    let eventsFilteredByDate= data.events.filter(event => event.date < data.currentDate);
+    return eventsFilteredByDate;
+}
+
+function filterSearchEvents(data, searchText) {
+    let eventsFiltered = data.events.filter(event =>
+        event.name.toLowerCase().includes(searchText)
+        ||
+        event.description.toLowerCase().includes(searchText)
+    )
+
+    console.log(eventsFiltered);
+    return eventsFiltered;
+}
+
+function filterCheckBoxCategory(data, container_checkbox_category) {
+    let checkboxes = container_checkbox_category.querySelectorAll("input[type=checkbox]:checked");
+    let categories = [];
+
+    if (checkboxes.length === 0) {
+        return data.events;
+    }
+
+    checkboxes.forEach(checkbox => {
+        categories.push(checkbox.id.split("-")[2]);
+    });
+
+    console.log(categories);
+
+    let eventsFiltered = data.events.filter(event =>
+        categories.includes(event.category)
+    );
+
+    console.log(eventsFiltered);
+
+    return eventsFiltered;
+}
+
+filterSearch.addEventListener("keyup", () => {    
+    let eventsFiltered = filterSearchEvents({ events: eventsFilteredByDate }, filterSearch.value.toLowerCase());
+    eventsFiltered = filterCheckBoxCategory({ events: eventsFiltered }, container_checkbox_category);
+    showEvents({ events: eventsFiltered }, container_cards);
+});
+
+container_checkbox_category.addEventListener("click", () => {
+    let eventsFiltered = filterCheckBoxCategory({ events: eventsFilteredByDate }, container_checkbox_category);
+    eventsFiltered = filterSearchEvents({ events: eventsFiltered }, filterSearch.value.toLowerCase());
+    showEvents({ events: eventsFiltered }, container_cards);
+});
+
+
+
+showCheckBoxCategory(data, container_checkbox_category);
+console.log(eventsFilteredByDate);
+showEvents({ events: eventsFilteredByDate }, container_cards);

@@ -38,10 +38,10 @@ const data = {
                 "Let's go meet the biggest dinosaurs in the paleontology museum.",
             category: "Museum",
             place: "Field",
+            assistance: 65892,
             capacity: 82000,
             price: 15,
             __v: 0,
-            assistance: 65892,
         },
         {
             _id: "639c723c992482e5f2834bef",
@@ -199,155 +199,85 @@ data.currentDate
 data.events
 data.events[0].name
 
-let container_cards = document.getElementById("container_cards");
-let container_checkbox_category = document.getElementById("container_checkbox_category");
-let filterSearch = document.getElementById("filter-search")
+let container_card_details = document.getElementById("container_card_details");
 
-let eventsFilteredByDate = filterEventsByDate(data);
+let urlFromDetails = window.location
+console.log(urlFromDetails);
 
+let url = new URL(urlFromDetails);
+console.log(url);
 
-function showEvents(data, container_cards) {
-    let cardsHTML = "";
+let id = url.searchParams.get("_id");
+console.log(id);
 
-    if (data.events.length > 0) {
-        for (let i = 0; i < data.events.length; i++) {
-            cardsHTML += createCard(data.events[i]);
-        }
-        container_cards.innerHTML = cardsHTML;
+function showCardDetails(data, container_card_details) {
+    let cardsDetailsHTML = "";
+
+    let even = data.events.find((event) => event._id === id);
+    console.log(even);
+
+    if (even) {
+        cardsDetailsHTML += createCardDetails(even);
 
     } else {
-        container_cards.innerHTML = `
-            <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
-                <symbol id="exclamation-triangle-fill" viewBox="0 0 16 16">
-                    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-                </symbol>
-            </svg>
+        cardsDetailsHTML += `<h2 class="text-center">No event found, no exist.</h2>`;
+    } 
 
-            <div class="alert alert-danger d-flex align-items-center" role="alert">
-                <svg class=" bi flex-shrink-0 me-2" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
-                <div>
-                    No events found to show
+    container_card_details.innerHTML = cardsDetailsHTML;
+}
+
+function createCardDetails(event) {
+    let cardDetailsHTML = `
+            <div class="card mb-3 w-100 h-100" id="${event._id}">
+                <div class="row g-0">
+                    <div class="col-md-6">
+                        <img src="${event.image}" class="img-fluid rounded-start h-100 w-100 object-fit-cover" alt="Event Image">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card-body d-flex flex-column justify-content-center h-100 w-100">
+                            <h5 class="card-title d-flex justify-content-center">${event.name}</h5>
+                            <p class="card-text text-center">${event.description}</p>
+                            <div class="d-flex">
+                                <p class="card-text fw-medium fs-5">Date:<span class="card-text mx-3 fs-6 text fw-normal">${event.date}</span></p>
+                            </div>
+                            <div class="d-flex">
+                                <p class="card-text fw-medium fs-5">Category:<span class="card-text mx-3 fs-6 text fw-normal">${event.category}</span></p>
+                            </div>
+                            <div class="d-flex">
+                                <p class="card-text fw-medium fs-5">Place:<span class="card-text mx-3 fs-6 text fw-normal">${event.place}</span></p>
+                            </div>
+                            <div class="d-flex">
+                                <p class="card-text fw-medium fs-5">Capacity:<span class="card-text mx-3 fs-6 text fw-normal">${event.capacity}</span></p>
+                            </div>
+                            ${event.assistance ? 
+                                `
+                                    <div id="assistance" class="d-flex">
+                                        <p class="card-text fw-medium fs-5">Assistance:<span class="card-text mx-3 fs-6 text fw-normal">${event.assistance}</span></p>
+                                    </div>
+                                ` 
+                            : 
+                                ""
+                            }
+                            ${event.estimate ? 
+                                `
+                                    <div id="estimate" class="d-flex">
+                                        <p class="card-text fw-medium fs-5">Estimate:<span class="card-text mx-3 fs-6 text fw-normal">${event.estimate}</span></p>
+                                    </div>
+                                ` 
+                            : 
+                                ""
+                            }
+                            <h4 class="d-flex fw-bold fs-5 justify-content-center mt-3">Price: <span class="text-warning fw-bold fs-5">$${event.price}</span></h4>
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
-    }
+
+        console.log(cardDetailsHTML);
+
+    return cardDetailsHTML;
 }
 
-function showCheckBoxCategory(data, container_checkbox_category) {
-    let ckBoxCategoryHTML = "";
 
-    if (data.events.length > 0) {
-
-        let categoriesFromEvents = data.events.map((event) => event.category);
-
-        let categoriesWithoutDuplicates = categoriesFromEvents.filter(
-            (category, index) => categoriesFromEvents.indexOf(category) === index
-        );
-
-        console.log(categoriesWithoutDuplicates);
-
-        for (let i = 0; i < categoriesWithoutDuplicates.length; i++) {
-            ckBoxCategoryHTML += createCheckBoxCategory(categoriesWithoutDuplicates[i]);
-        }
-
-        container_checkbox_category.innerHTML = ckBoxCategoryHTML;
-    }
-}
-
-function createCard(event) {
-
-    let id = event._id;
-    let url = new URLSearchParams({ _id: id });
-
-    let cardHTML = `  
-        <div id="${event._id}" class="card m-3">
-            <img src="${event.image}" class="card-img-top w-100 h-50 object-fit-cover" alt="${event.name}">
-            <div class="card-body text-center">
-                <h5 class="card-title text-capitalize">${event.name}</h5>
-                <p class="card-text">${event.description}</p>
-            </div>
-            <div class="d-flex justify-content-around mb-4">
-                <h4 class="fw-bold fs">Price: <span class="text-warning fw-bold fs-5"> $${event.price} </span></h4>
-                <a class="btn btn-primary" href="../pages/details.html?${url}">Details</a>
-            </div>
-        </div>
-    `;
-
-    console.log(url);
-    return cardHTML;
-}
-
-function createCheckBoxCategory(event) {
-    let checkboxCategoryHTML = `
-        <div class="form-check me-2">
-            <input class="form-check-input" type="checkbox" value="" id="filter-check-${event}">
-            <label class="form-check-label" for="filter-check-${event}">
-                ${event}
-            </label>
-        </div>
-    `;
-
-    console.log(checkboxCategoryHTML);
-
-    return checkboxCategoryHTML;
-
-}
-
-function filterEventsByDate(data) {
-    let eventsFilteredByDate= data.events.filter(event => event.date > data.currentDate);
-    return eventsFilteredByDate;
-}
-
-function filterSearchEvents(data, searchText) {
-    let eventsFiltered = data.events.filter(event =>
-        event.name.toLowerCase().includes(searchText)
-        ||
-        event.description.toLowerCase().includes(searchText)
-    )
-
-    console.log(eventsFiltered);
-    return eventsFiltered;
-}
-
-function filterCheckBoxCategory(data, container_checkbox_category) {
-    let checkboxes = container_checkbox_category.querySelectorAll("input[type=checkbox]:checked");
-    let categories = [];
-
-    if (checkboxes.length === 0) {
-        return data.events;
-    }
-
-    checkboxes.forEach(checkbox => {
-        categories.push(checkbox.id.split("-")[2]);
-    });
-
-    console.log(categories);
-
-    let eventsFiltered = data.events.filter(event =>
-        categories.includes(event.category)
-    );
-
-    console.log(eventsFiltered);
-
-    return eventsFiltered;
-}
-
-filterSearch.addEventListener("keyup", () => {    
-    let eventsFiltered = filterSearchEvents({ events: eventsFilteredByDate }, filterSearch.value.toLowerCase());
-    eventsFiltered = filterCheckBoxCategory({ events: eventsFiltered }, container_checkbox_category);
-    showEvents({ events: eventsFiltered }, container_cards);
-});
-
-container_checkbox_category.addEventListener("click", () => {
-    let eventsFiltered = filterCheckBoxCategory({ events: eventsFilteredByDate }, container_checkbox_category);
-    eventsFiltered = filterSearchEvents({ events: eventsFiltered }, filterSearch.value.toLowerCase());
-    showEvents({ events: eventsFiltered }, container_cards);
-});
-
-
-
-showCheckBoxCategory(data, container_checkbox_category);
-console.log(eventsFilteredByDate);
-showEvents({ events: eventsFilteredByDate }, container_cards);
-
-
+showCardDetails(data, container_card_details);

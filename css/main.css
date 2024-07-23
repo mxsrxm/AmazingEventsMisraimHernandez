@@ -37,3 +37,8 @@ footer > ul > li > a > img {
     width: 280px;
     height: 400px;
 }
+
+svg {
+    width: 30px;
+    height: 30px;
+}
