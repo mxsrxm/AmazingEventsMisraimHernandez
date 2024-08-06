@@ -14,11 +14,12 @@
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-md sticky-top">
+        <nav class="navbar navbar-expand-md sticky-top bg-light shadow">
             <div class="container-fluid">
                 <a class="navbar-brand px-3" href="index.html">
-                    <img src="./assets/amazing_brand.png" alt="Logo">
+                    <img src="./assets/amazing_brand.png" alt="Logo" class="mx-5">
                 </a>
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -31,16 +32,16 @@
                             <a class="nav-link px-3 active fw-bold" aria-current="page" href="index.html">HOME</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3" href="./pages/upcoming_events.html">UPCOMING EVENTS</a>
+                            <a class="nav-link px-3 fw-medium" href="./pages/upcoming_events.html">UPCOMING EVENTS</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3" href="./pages/past_events.html">PAST EVENTS</a>
+                            <a class="nav-link px-3 fw-medium" href="./pages/past_events.html">PAST EVENTS</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3" href="./pages/contact_us.html">CONTACT US</a>
+                            <a class="nav-link px-3 fw-medium" href="./pages/contact_us.html">CONTACT US</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3" href="./pages/stats.html">STATS</a>
+                            <a class="nav-link px-3 fw-medium" href="./pages/stats.html">STATS</a>
                         </li>
                     </ul>
                 </div>
@@ -64,9 +65,10 @@
                     aria-label="Slide 5"></button>
             </div>
             <div class="carousel-inner d-flex align-items-center">
+
                 <div class="carousel-item active">
                     <img src="./assets/optional_banner_1.jpg" class=" w-100 object-fit-cover" alt="Fa Food">
-                    <div class="carousel-caption">
+                    <div class="carousel-caption d-block">
                         <h5>HOME</h5>
                     </div>
                 </div>
@@ -109,15 +111,21 @@
             </button>
         </div>
 
-        <div class="container py-5">
+        <div class="container py-4">
             <div class="row align-items-start">
-                <div class="col-md-9">
-                    <div id="container_checkbox_category" class="container d-flex flex-wrap align-items-center"> </div>
+                <div class="col-md-8">
+                    <h6 class="mb-3">Filter by Category</h6>
+                    <div id="container_checkbox_category" class="container d-flex flex-wrap align-items-center mb-3">
+
+                    </div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <form class="mb-3">
+                        <h6 class="mb-3">Search Events</h6>
                         <div class="input-group">
+                            <span class="input-group-text" id="addon-wrapping"><img src="./assets/lupa.png"
+                                    alt=""></span>
                             <input class="form-control" type="search" id="filter-search" placeholder="Search Events">
                         </div>
                     </form>
@@ -125,9 +133,9 @@
             </div>
         </div>
 
-        <div id="container_cards" class="container-fluid d-flex flex-wrap justify-content-center  py-3  px-3"> </div>
+        <div id="container_cards" class="container-fluid d-flex flex-wrap justify-content-center px-3"> </div>
 
-        <script src="./js/index.js"></script>
+        <script src="./js/index.js" type="module"></script>
     </main>
 
 
@@ -149,7 +157,8 @@
                 </a>
             </li>
         </ul>
-        <span class="mb-3 mb-md-0 custom-color">&copy; COHORT</span>
+        <p class="font-monospace fw-medium"><span class="mb-3 fw-medium">&copy; COHORT</span> <br> Developed By Misraim
+            Hernandez</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

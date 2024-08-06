@@ -1,5 +1,5 @@
 body {
-    background-color: #77966d35;
+    background-color: #DEDEDE;
     height: 100vh;
 }
 
@@ -7,13 +7,10 @@ header {
     height: 60px;
 }
 
-nav {
-    background-color: #bcc667;
-}
+
 
 nav > div > a > img {
-    width: 120px;
-    height: 24px;
+    width: 150px;
 }
 
 main {
@@ -25,20 +22,15 @@ footer {
 }
 
 footer > ul > li > a > img {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: auto;
 }
 
 .carousel {
-    height: 200px;
+    height: 300px;
 }
 
 .card {
     width: 280px;
-    height: 400px;
-}
-
-svg {
-    width: 30px;
-    height: 30px;
+    height: 450px;
 }
